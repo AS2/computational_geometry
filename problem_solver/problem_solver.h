@@ -10,5 +10,7 @@
 // Time using: O(N^2 * log^2(B)), where B is maximum possible absolute value of coordinate
 class SingleHashProblemSolver {
 public:
+    // Time: O(N), memory O(N)
+    static std::vector<Point> removeDublicatesPoints(const std::vector<Point> &);
     static std::list<PointsIdxsUSet> solveProblem(const std::vector<Point> &);
 };

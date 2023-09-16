@@ -8,6 +8,12 @@
 using Point = std::pair<int, int>;
 using PointsIdxsUSet = std::unordered_set<int>;
 
+struct hashFunction {
+    size_t operator()(const Point &x) const{
+        return (x.first + x.second + 1) * (x.first + x.second) / 2 + x.second;
+    }
+};
+
 class Line {
 public:
     void ConstuctFromPoints(const Point& p1, const Point& p2) {
@@ -54,7 +60,7 @@ private:
 };
 
 
-inline int CantorsHashingPair(const int& a, const int& b) {
+inline size_t CantorsHashingPair(const size_t& a, const size_t& b) {
     return (a + b + 1) * (a + b) / 2 + b;
 }
 
@@ -64,6 +70,6 @@ class std::hash<Line>
 public:
   std::size_t operator()(const Line& k) const
   {
-    return abs(CantorsHashingPair(k.GetA(), CantorsHashingPair(k.GetB(), k.GetC())));
+    return CantorsHashingPair(abs(k.GetA()), CantorsHashingPair(abs(k.GetB()), abs(k.GetC())));
   }
 };

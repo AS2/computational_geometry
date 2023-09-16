@@ -5,6 +5,21 @@
 
 #include "problem_solver.h"
 
+std::vector<Point> SingleHashProblemSolver::removeDublicatesPoints(const std::vector<Point> &points) {
+    std::unordered_set<Point, hashFunction> points_set;
+
+    for (auto& point : points)
+        points_set.insert(point);
+
+    std::vector<Point> solo_points(points_set.size());
+    int i = 0;
+    for (auto& point : points_set)
+        solo_points[i++] = point;
+
+    return solo_points;
+}
+    
+
 std::list<PointsIdxsUSet> SingleHashProblemSolver::solveProblem(const std::vector<Point> &points) {
     std::list<PointsIdxsUSet> points_subsets;
 
