@@ -2,19 +2,23 @@
 #include <algorithm>
 #include <unordered_map>
 #include <unordered_set>
+#include <list>
 
 #include "problem_solver.h"
 
 std::vector<Point> SingleHashProblemSolver::removeDublicatesPoints(const std::vector<Point> &points) {
-    std::unordered_set<Point, hashFunction> points_set;
+    std::unordered_map<Point, std::list<size_t>> points_index_set;
 
-    for (auto& point : points)
-        points_set.insert(point);
+    for (size_t i = 0; i < points.size(); i++)
+        if (points_index_set[points[i]].empty())
+            points_index_set[points[i]].push_front(i);
 
-    std::vector<Point> solo_points(points_set.size());
-    int i = 0;
-    for (auto& point : points_set)
-        solo_points[i++] = point;
+
+    std::vector<Point> solo_points(points_index_set.size());
+    size_t solo_points_pos = 0;
+    for (size_t i = 0; i < points.size(); i++)
+        if (points_index_set[points[i]].front() == i)
+            solo_points[solo_points_pos++] = points[i];
 
     return solo_points;
 }

@@ -5,13 +5,36 @@
 #include <functional>
 #include <unordered_set>
 
-using Point = std::pair<int, int>;
+// usefull func
+inline size_t CantorsHashingPair(const size_t& a, const size_t& b) {
+    return (a + b + 1) * (a + b) / 2 + b;
+}
+
+// Point class
 using PointsIdxsUSet = std::unordered_set<int>;
 
-struct hashFunction {
-    size_t operator()(const Point &x) const{
-        return (x.first + x.second + 1) * (x.first + x.second) / 2 + x.second;
+class Point {
+public:
+    Point() = default;
+    Point(const int& x, const int& y) : m_x(x), m_y(y) {}
+
+    int GetX() const {return m_x;}
+    int GetY() const {return m_y;}
+
+    bool operator==(const Point &other) const { 
+        return (m_x == other.m_x && m_y == other.m_y);
     }
+private:
+    int m_x, m_y;
+};
+
+template <>
+class std::hash<Point>
+{
+public:
+  std::size_t operator()(const Point& point) const {
+    return CantorsHashingPair(abs(point.GetX()), abs(point.GetY()));
+  }
 };
 
 class Line {
@@ -22,9 +45,9 @@ public:
             return;
         
         // Count A, B, C
-        A = p2.second - p1.second;
-        B = p1.first - p2.first;
-        C = -1 * (p1.first * A + p1.second * B);
+        A = p2.GetY() - p1.GetY();
+        B = p1.GetX() - p2.GetX();
+        C = -1 * (p1.GetX() * A + p1.GetY() * B);
 
         // Normalize to some form (for example like this)
         if (A < 0)
@@ -45,11 +68,8 @@ public:
         A /= gcd, B /= gcd, C /= gcd;
     }
 
-    bool operator==(const Line &other) const
-    { 
-        return (A == other.A
-            && B == other.B
-            && C == other.C);
+    bool operator==(const Line &other) const { 
+        return (A == other.A && B == other.B && C == other.C);
     }
 
     int GetA() const {return A;};
@@ -59,17 +79,11 @@ private:
     int A, B, C;
 };
 
-
-inline size_t CantorsHashingPair(const size_t& a, const size_t& b) {
-    return (a + b + 1) * (a + b) / 2 + b;
-}
-
 template <>
 class std::hash<Line>
 {
 public:
-  std::size_t operator()(const Line& k) const
-  {
+  std::size_t operator()(const Line& k) const {
     return CantorsHashingPair(abs(k.GetA()), CantorsHashingPair(abs(k.GetB()), abs(k.GetC())));
   }
 };
