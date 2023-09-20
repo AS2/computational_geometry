@@ -6,12 +6,12 @@
 #include "output_provider/output_provider.h"
 
 int main(int argc, char *argv[]) {
-    // if (argc < 2) {
-    //     std::cout << "Warning: file name with points! Finish process..." << std::endl;
-    //     return 30; 
-    // }
-    // auto name = std::string(argv[1]);
-    auto name = std::string("../tests/0.txt");
+    if (argc < 2) {
+        std::cout << "Warning: file name with points! Finish process..." << std::endl;
+        return 30; 
+    }
+    auto name = std::string(argv[1]);
+    //auto name = std::string("../tests/0.txt");
     
     // read points
     auto points = FileInputProvider::getPoints(name);
