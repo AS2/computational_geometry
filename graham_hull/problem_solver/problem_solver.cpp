@@ -6,16 +6,16 @@
 #include "problem_solver.h"
 
 std::vector<Point> GrahamHullBuilder::removeDublicatesPoints(const std::vector<Point> &points) {
-    std::unordered_map<Point, std::list<size_t>> points_index_set;
+    std::unordered_map<Point, std::list<u_int64_t>> points_index_set;
 
-    for (size_t i = 0; i < points.size(); i++)
+    for (u_int64_t i = 0; i < points.size(); i++)
         if (points_index_set[points[i]].empty())
             points_index_set[points[i]].push_front(i);
 
 
     std::vector<Point> solo_points(points_index_set.size());
-    size_t solo_points_pos = 0;
-    for (size_t i = 0; i < points.size(); i++)
+    u_int64_t solo_points_pos = 0;
+    for (u_int64_t i = 0; i < points.size(); i++)
         if (points_index_set[points[i]].front() == i)
             solo_points[solo_points_pos++] = points[i];
 
@@ -23,24 +23,33 @@ std::vector<Point> GrahamHullBuilder::removeDublicatesPoints(const std::vector<P
 }
 
 
-int GrahamHullBuilder::doubleSquare(const Point& b, const Point& e, const Point& p) {
+int64_t GrahamHullBuilder::doubleSquare(const Point& b, const Point& e, const Point& p) {
     auto pos = b.GetX() * e.GetY() + b.GetY() * p.GetX() + e.GetX() * p.GetY();
     auto neg = p.GetX() * e.GetY() + b.GetY() * e.GetX() + b.GetX() * p.GetY();
 
     return pos - neg;
-    // return (e.GetX() - b.GetX()) * (p.GetX() - e.GetX()) - (e.GetY() - b.GetY()) * (p.GetY() - e.GetY()) > 0;
 }
 
 
 std::vector<Point> GrahamHullBuilder::buildHull(const std::vector<Point> &points) {
     // Step 0: If there are not enought points - return them all (cauze thay are all elements of hull)
-    if (points.size() < 3)
-        return points;
+    if (points.size() < 3) {
+        if (points.size() != 2)
+            return points;
+        // Swap 2 points for lil optimization (we dont need to call sort algorithm like in "step 2")
+        if (points[0].GetY() > points[1].GetY() || 
+            (points[0].GetY() == points[1].GetY() && points[0].GetX() > points[1].GetX())) {
+            std::vector<Point> result = {points[1], points[0]};
+            return result;
+        }
+        else
+            return points;
+    }
 
     // Step 1: take the leftest downest point and push it to begin of array
     auto points_tmp = points;
     
-    for (int i = 1; i < points_tmp.size(); i++)
+    for (u_int64_t i = 1; i < points_tmp.size(); i++)
         if (points_tmp[0].GetY() > points_tmp[i].GetY() || 
             (points_tmp[0].GetY() == points_tmp[i].GetY() && points_tmp[0].GetX() > points_tmp[i].GetX())) {
             auto tmp = points_tmp[i];
@@ -65,7 +74,7 @@ std::vector<Point> GrahamHullBuilder::buildHull(const std::vector<Point> &points
     hull.push_back(points_tmp[0]);
     hull.push_back(points_tmp[1]);
 
-    for (int i = 2; i < points_tmp.size(); i++) {
+    for (u_int64_t i = 2; i < points_tmp.size(); i++) {
         while (hull.size() >= 2 && doubleSquare(hull[hull.size() - 2], hull[hull.size() - 1], points_tmp[i]) <= 0)
             hull.pop_back();
         hull.push_back(points_tmp[i]);

@@ -11,8 +11,8 @@ int main(int argc, char *argv[]) {
         return 30; 
     }
     auto name = std::string(argv[1]);
-    //auto name = std::string("../tests/0.txt");
-    
+    // auto name = std::string("../tests/1.txt");
+
     // read points
     auto points = FileInputProvider::getPoints(name);
     

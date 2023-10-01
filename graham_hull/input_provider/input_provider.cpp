@@ -9,17 +9,17 @@ std::vector<Point> FileInputProvider::getPoints(const std::string& fileName) {
     
     // read lines count
     std::string file_line;
-    u_int32_t points_cnt;
+    u_int64_t points_cnt;
     std::getline(fin, file_line);
     std::istringstream iss(file_line);
     iss >> points_cnt;
     std::vector<Point> points(points_cnt);
 
     // read lines    
-    int line_indx = 0;
+    u_int64_t line_indx = 0;
     while (std::getline(fin, file_line)) {
         std::istringstream iss(file_line);
-        int x_coord, y_coord;
+        int64_t x_coord, y_coord;
 
         // print bad line index
         if (!(iss >> x_coord >> y_coord))

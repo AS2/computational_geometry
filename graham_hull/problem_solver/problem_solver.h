@@ -14,5 +14,5 @@ public:
     static std::vector<Point> removeDublicatesPoints(const std::vector<Point> &);
     static std::vector<Point> buildHull(const std::vector<Point> &);
 private:
-    static int doubleSquare(const Point& b, const Point& e, const Point& p);
+    static int64_t doubleSquare(const Point& b, const Point& e, const Point& p);
 };
